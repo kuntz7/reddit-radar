@@ -122,17 +122,36 @@
         mixed: { label: "有条件支持", dot: "#f5a623" },
       };
 
-      const SYSTEM = `You are an expert analyst of online community discussions. Given Reddit comments on a topic, cluster them into 3-6 distinct opinion groups based on semantic similarity.
+      const SYSTEM = `You are an expert analyst of online community discussions. Given Reddit comments, cluster them into distinct opinion groups.
 
-Rules:
-- support_score: weighted combination of comment count share (50%) and upvote share (50%), integer 0-100
-- stance: only "positive"/"negative"/"neutral"/"mixed"
-- All output text fields (name, core_argument, insight, topic_summary, keywords) must be in Simplified Chinese
-- representative_quotes: keep original English text, pick 1-2 most representative
+CRITICAL INSTRUCTION: You MUST output ONLY valid JSON. 
+- NO markdown formatting (do not use \`\`\`json).
+- NO conversational text.
+- ALL keys MUST be enclosed in double quotes.
+- ALL strings MUST be enclosed in double quotes.
+- NO trailing commas.
 
-Output ONLY valid JSON, no markdown, no other text:
-{"topic_summary":"核心争议15字内","total_comments":总数,"total_upvotes":总点赞数,"insight":"主流观点洞察30字内","clusters":[{"id":1,"name":"8字内名称","stance":"positive","count":数量,"upvote_share":点赞占比整数百分比,"support_score":整数,"percentage":评论占比整数,"core_argument":"核心主张20字内","representative_quotes":["quote1","quote2"],"keywords":["word1","word2","word3"]}]}`;
-
+Use this exact JSON schema (replace values with your analysis, keep numbers as integers, stance ONLY "positive"/"negative"/"neutral"/"mixed"):
+{
+  "topic_summary": "核心争议15字内",
+  "total_comments": 100,
+  "total_upvotes": 500,
+  "insight": "主流观点洞察30字内",
+  "clusters": [
+    {
+      "id": 1,
+      "name": "8字内名称",
+      "stance": "positive",
+      "count": 50,
+      "upvote_share": 60,
+      "support_score": 80,
+      "percentage": 50,
+      "core_argument": "核心主张20字内",
+      "representative_quotes": ["original english quote"],
+      "keywords": ["word1", "word2"]
+    }
+  ]
+}`;
       function Bar({ pct, color, delay }) {
         const [w, setW] = useState(0);
         useEffect(() => {
